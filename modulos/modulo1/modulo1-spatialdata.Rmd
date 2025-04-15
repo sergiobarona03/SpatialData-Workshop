@@ -1,0 +1,214 @@
+---
+title: "**Módulo 1: Introducción al manejo de datos espaciales**"
+subtitle: "Fundamentos y manejo de datos espaciales vectoriales"
+
+author: 
+- Sergio A. Barona \newline
+- Laboratorio de Economía Aplicada (LEA) \newline
+- Departamento de Economía y Finanzas \newline
+
+institute:
+- Universidad Javeriana Cali
+
+date: "21-04-2025"
+output:
+  html_document:
+    toc: true
+    toc_float:
+        collapsed: true
+        smooth_scroll: false
+    number_sections: true
+    theme: spacelab
+    highlight: tango
+    
+header-includes:
+  - \AtBeginEnvironment{CSLReferences}{\tiny}
+  - \AtBeginSection{}
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Motivación: el lugar importa
+
+Los datos espaciales están en todas partes.Posibles preguntas (Bivand,Pebesma & Gómez Rubio, 2008):
+
+- ¿La distribución espacial de la incidencia de enfermedades permite concluir que existen conglomerados y, si es así, estos conglomerados están relacionados con factores como la edad, pobreza o fuentes de contaminación?
+
+- ¿Tienden los gobiernos a comparar sus políticas con las de sus países vecinos o actúan de manera independiente?
+
+El **análisis de datos espaciales** es un desafío, porque se ocupa de preguntas que no se pueden responder directamente examinando los datos. 
+
+# Datos espaciales en economía
+
+## Ejemplo 1:
+
+**Pregunta:**
+
+
+## Ejemplo 2:
+
+**Pregunta:**
+
+# R como herramienta SIG
+
+## ¿Por qué R en general? 
+
+R tiene las siguientes ventajas:
+
+- R es un software libre.
+- R es multiplataforma.
+- R tiene una **sofisticada capacidad para hacer gráficos**, incluyendo paquetes gráficos especializados.
+- R tiene librerías que cubren un amplio rango de las metodologías de la estadística y las matemáticas (series temporales, optimización matemática, inferencia estadística, etc.)
+- Existe una comunidad activa que ha promovido el incremento en su número de usuarios: **The R Project**, **R Contributor Site**, **RStudio Community** y **R Bloggers**.
+
+# ¿Qué es SIG?
+
+Tradicionalmente, el almacenamiento y análisis de datos espaciales se ha realizado en Sistemas de Información Geográfica (SIG).
+
+**SIG:** un SIG es "a powerful set of tools for collecting, storing, retrieving at will, transforming,and displaying spatial data from the real world for a particular set of purposes", _i.e._, "checking, manipulating, and analysing data, which are spatially referenced to the Earth" (Burrough & McDonnell, 1998, p. 11).
+
+
+
+## ¿Por qué R como herramienta SIG?
+
+En virtud se capacidad para analizar y visualizar datos, R es un buena elección para el análisis de datos espaciales.
+
+Veremos que:
+
+- Muchos problemas pueden resolverse usando únicamente **R base**.
+
+## Principales paquetes para datos espaciales
+
+### Paquetes actuales: sf y terra
+
+[Insertar Figura 1.1. de Burrough & McDonnell(1998)]
+
+### Old spatial packages:
+
+Antes del desarrollo de **sf**, los siguientes paquetes eran los más utilizados:
+
+- *sp*: usado para representar y trabajar con datos espaciales vectoriales
+
+Igualmente:
+
+- **rgdal** (Bivand, Keitt, and Rowlingson, 2023).
+- **rgeos** (Bivand and Rundel, 2022)
+- **maptools** (Bivand and Lewin-Koh, 2022)
+
+Estos paquetes no reciben matenimiento y, por ende, serán retirados.
+
+
+# Conceptos básicos: datos espaciales
+
+## Tipos de datos espaciales: vector and raster data (Areal data)
+
+Areal data is a fixed countable colection of regular or irregular areal units at which variables are observed (Moraga, 2023)
+
+## Datos vectoriales}
+
+Vector data is used to display points, lynes, and polygons, and possibly associated information.
+
+[Añadir ejemplo]
+
+## Datos raster
+
+Raster data are regular grids with cells of equal size that are used to store values of spatially continuous phenomeno, such as elevation, temperature, air pollution, etc.
+
+## Otros tipos de datos espaciales
+
+### Geostatistical data: 
+
+[Añadir ejemplo]
+
+### Point patterns
+
+[Añadir ejemplo]
+
+### Spatio-temporal data
+
+[Añadir ejemplo]
+
+### Spatial functional data
+
+[Añadir ejemplo]
+
+### Mobility data
+
+[Añadir ejemplo]
+
+
+# Datos espaciales en R
+
+Los datos espaciales pueden ser representados utilizando vector and raster data.
+
+Actualmente, los paquetes principales en R para gestionar y analizar datos espaciales son:
+
+- **Paquete sf (Pebesma, 2022)**
+- **Paquete terra (Hijmans, 2022)**
+
+En lo sucesivo, el curso-taller se desarrollará con base en datos espaciales vectoriales. No se usarán más datos raster.
+
+# Vector data
+
+Los vector data son empleados para representa puntos, líneas y polígonos.
+
+## Exploración de datos espaciales: Shapefile
+
+Los vector data usualmente son representados usando un formato de almacenamiento llamado **shapefile**.
+
+Note que un **shapefile** no es un único archivos, sino una colección de archivos relacionados. Hay **tres archivos obligatorios**:
+
+- *.shp*: contiene la geometry data.
+- *.shx*: positional index of the geometry data
+- *.dbt*: attributes for each shape
+
+Otros archivos pueden encontrarse:
+
+- *.prj*: plain text describing the projection.
+- *.sbn* y *.sbx*: spatial indices of the geometry data.
+- *.shp.xml*: spatial metadata in XMLformat.
+
+## Cargar vector data
+
+La función **st_read()** del paquete **sf** puede ser usada para leer el **shapefile**. 
+
+```{r loading library, fig.cap="", results='show', warning=FALSE, message=FALSE, echo=TRUE}
+library(tidyverse)
+library(sf)
+```
+
+```{r read, fig.cap="", results='show', warning=FALSE, message=FALSE, echo=TRUE}
+library(sf)
+col.shp = st_read(dsn = "C:\\Users\\Portatil\\Desktop\\SpatialData-Workshop\\vector_data\\colombia\\",
+            layer = "COLOMBIA")
+class(col.shp)
+```
+Examinar los datos cargados:
+
+
+```{r read, fig.cap="", results='show', warning=FALSE, message=FALSE, echo=TRUE}
+head(col.shp)
+```
+
+Visualizar el primer atributo:
+
+
+```{r read, fig.cap="", results='show', warning=FALSE, message=FALSE, echo=TRUE}
+plot(col.shp[1])
+```
+
+Como se mencionó anteriormente, antes de la aparición de **sf**, el paquete **sp** era utilizado para gestionar y analizar datos espaciales. La clase **sp**...
+
+La función *st_as_sf()* sirve para transformar objectos **sp** a **sf**. Similarmente, un objeto **sf** puede ser transformado en un objeto **sp** a través de 
+```{r read, fig.cap="", results='show', warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+
+as(sf_object, "Spatial")
+
+```
+
+## Coordinate Reference Systems
+
+
+## Ejercicio 1: 
+
