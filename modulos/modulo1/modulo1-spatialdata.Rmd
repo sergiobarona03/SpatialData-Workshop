@@ -43,8 +43,7 @@ El **análisis de datos espaciales** es un desafío, porque se ocupa de pregunta
 
 ## Ejemplo 1:
 
-**Pregunta:**
-
+**Pregunta:** 
 
 ## Ejemplo 2:
 
@@ -67,8 +66,6 @@ R tiene las siguientes ventajas:
 Tradicionalmente, el almacenamiento y análisis de datos espaciales se ha realizado en Sistemas de Información Geográfica (SIG).
 
 **SIG:** un SIG es "a powerful set of tools for collecting, storing, retrieving at will, transforming,and displaying spatial data from the real world for a particular set of purposes", _i.e._, "checking, manipulating, and analysing data, which are spatially referenced to the Earth" (Burrough & McDonnell, 1998, p. 11).
-
-
 
 ## ¿Por qué R como herramienta SIG?
 
@@ -99,23 +96,23 @@ Igualmente:
 Estos paquetes no reciben matenimiento y, por ende, serán retirados.
 
 
-# Conceptos básicos: datos espaciales
-
-## Tipos de datos espaciales: vector and raster data (Areal data)
+# Tipos de datos espaciales: vector and raster data (Areal data)
 
 Areal data is a fixed countable colection of regular or irregular areal units at which variables are observed (Moraga, 2023)
 
-## Datos vectoriales}
+### Datos vectoriales
 
 Vector data is used to display points, lynes, and polygons, and possibly associated information.
 
 [Añadir ejemplo]
 
-## Datos raster
+### Datos raster
 
 Raster data are regular grids with cells of equal size that are used to store values of spatially continuous phenomeno, such as elevation, temperature, air pollution, etc.
 
 ## Otros tipos de datos espaciales
+
+Moraga (2023) clasifica los datos vectoriales y raster como areal data. Sin embargo, menciona que existen otros tipos de datos espaciales:
 
 ### Geostatistical data: 
 
@@ -139,15 +136,6 @@ Raster data are regular grids with cells of equal size that are used to store va
 
 
 # Datos espaciales en R
-
-Los datos espaciales pueden ser representados utilizando vector and raster data.
-
-Actualmente, los paquetes principales en R para gestionar y analizar datos espaciales son:
-
-- **Paquete sf (Pebesma, 2022)**
-- **Paquete terra (Hijmans, 2022)**
-
-En lo sucesivo, el curso-taller se desarrollará con base en datos espaciales vectoriales. No se usarán más datos raster.
 
 # Vector data
 
@@ -201,6 +189,7 @@ plot(col.shp[1])
 Como se mencionó anteriormente, antes de la aparición de **sf**, el paquete **sp** era utilizado para gestionar y analizar datos espaciales. La clase **sp**...
 
 La función *st_as_sf()* sirve para transformar objectos **sp** a **sf**. Similarmente, un objeto **sf** puede ser transformado en un objeto **sp** a través de 
+
 ```{r read, fig.cap="", results='show', warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
 
 as(sf_object, "Spatial")
@@ -209,6 +198,90 @@ as(sf_object, "Spatial")
 
 ## Coordinate Reference Systems
 
+Los Coordinate Reference System (CRS) de los datos espaciales especifica:
 
-## Ejercicio 1: 
+- El origen
+- The unit of measurement of the spatial coordinates
+
+Las CRS son importantes para el manejo, análisis y visualización de datos espaciales. Locations on earth can be referenced using:
+
+- Unprojected (also called geographic) 
+- Projected CRSs
+
+### Geographic CRS
+
+- La latitud y la longitud son usados para identificar locaciones on the Earth's three-dimensional ellipsoid surface.
+
+- Latitude values measure the angles north or south of the equator (0 degrees) and range from -90 degrees at the south pole to 90 degrees at the north pole.
+
+
+- Longitude values measure the angles west or east of the prime meridian. Longitude values range from –180 degrees when running west to 180 degrees when running east 
+
+Latitude and longitude coordinates may be expressed in degrees, minutes, and seconds, or in decimal degrees:
+
+### Projected CRS
+
+- It uses Cartesian coordinates to reference a location on two-dimensional representation of the Earth. 
+
+- All projections produce distortion of the Earth’s surface in some fashion, and cannot simultaneously preserve all area, direction, shape, and distance propertie
+
+[Agregar figura]
+
+### EPSG codes
+
+Most common CRSs can be specified by providing their EPSG (European Petroleum Survey Group) codes or their Proj4 strings. Common spatial projections can be found at https://spatialreference.org/ref/. Details of a given projection can be inspected using the st_crs() function of the sf package. 
+
+For example, the EPSG code 4326 refers to the WGS84 longitude/latitude projection. 
+
+
+```{r read, fig.cap="", results='show', warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+
+st_crs("EPSG:4326")$Name
+
+st_crs("EPSG:4326")$proj4string
+
+st_crs("EPSG:4326")$epsg
+
+```
+
+
+### Transforming CRS with sf and terra
+
+Functions sf::st_crs() and terra::crs() allow us to get the CRS of spatial data. These functions also allow us to set a CRS to spatial data by using st_crs(x) <- value if x is a sf object, and crs(r) <- value if r is a raster. Notice that setting a CRS does not transform the data, it just changes the CRS label. We may want to set a CRS to data that does not come with CRS, and the CRS should be what it is, not what we would like it to be. We use sf::st_transform() and terra::project() to transform the sf or raster data, respectively, to a new CRS.
+
+For sf data:
+
+```{r read, fig.cap="", results='show', warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+
+library(sf)
+pathshp <- system.file("shape/nc.shp", package = "sf")
+map <- st_read(pathshp, quiet = TRUE)
+
+# Get CRS
+# st_crs(map)
+# Transform CRS
+map2 <- st_transform(map, crs = "EPSG:4326")
+# Get CRS
+# st_crs(map2)
+
+```
+
+For terra:
+
+```{r read, fig.cap="", results='show', warning=FALSE, message=FALSE, echo=TRUE, eval=FALSE}
+
+library(terra)
+pathraster <- system.file("ex/elev.tif", package = "terra")
+r <- rast(pathraster)
+
+# Get CRS
+# crs(r)
+# Transform CRS
+r2 <- terra::project(r, "EPSG:2169")
+# Get CRS
+# crs(r2)
+
+```
+
+
 
