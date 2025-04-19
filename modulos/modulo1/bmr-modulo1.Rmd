@@ -1,0 +1,109 @@
+---
+title: "Introducción al manejo de datos espaciales usando R"
+subtitle: Módulo 1 
+author:
+- Sergio A. Barona \newline
+- Laboratorio de Economía Aplicada \newline
+- Departamento de Economía y Finanzas \newline
+date: '21-04-2025'
+output:
+  beamer_presentation:
+    theme: Berlin
+    fonttheme: structurebold
+    slide_level: 2
+    toc: yes
+  ioslides_presentation: default
+institute:
+- Pontificia Universidad Javeriana de Cali
+fontsize: 10 pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  paste0("\n \\", "tiny","\n\n", x, "\n\n \\normalsize")
+})
+```
+
+# Presentación del Curso
+
+
+## Datos espaciales: la ubicación importa
+
+Más allá de la elaboración de mapas, los datos espaciales permiten formular y responder preguntas que dependen de la **localización geográfica** y, por tanto, no se puede resolver únicamente mediante la observación directa de los datos (Bivand, Pebesma & Gómez-Rubio, 2008).
+
+¿Qué tipo de preguntas se pueden abordar?
+
+- ¿Cuáles son los patrones espaciales y principales factores climáticos de la transmisión de la malaria en tres zonas fronterizas de Brasil, Venezuela y Guyana? (Wangdi et al., 2022)
+
+- ¿Cuál es la distribución espacial y cuáles son los factores predictivos de la violencia doméstico contra las mujeres en Etiopia? (Seid et al., 2021)
+
+- ¿Influye la distancia geográfica entre el candidato y el votante en la probabilidad de voto en las elecciones parlamentarias de Reino Unido? (Arzheimer & Evans, 2012)
+
+¿Y usando datos socioeconómicos?
+
+- ¿Influyen los factores espaciales en la convergencia del ingreso regional en Estados Unidos? (Rey & Mountouri, 1999)
+
+- ¿Varían los procesos que generan la pobreza infantil en diferentes subregiones de Estados Unidos? (Curtis, Voss & Long, 2012)
+
+
+## Rey & Mountouri (1999)
+
+
+
+## Curtis, Voss & Long (2012)
+
+
+
+# R como herramienta SIG
+
+
+## ¿Por qué R en general?
+
+**R** tiene las siguientes ventajas:
+
+-   R es un software libre.
+
+-   R es multiplataforma.
+
+-   R tiene una **sofisticada capacidad para hacer gráficos**, incluyendo paquetes gráficos especializados.
+
+-   R tiene librerías que cubre un amplio rango de la metodologías de la estadística y las matemáticas (series temporales, optimización matemática, inferencia estadística, etc.)
+
+-   Existe una comunidad activa que ha promovido el incremento en su número de usuarios ([\textcolor{cyan}{The R Project}](https://www.r-project.org/), [\textcolor{cyan}{R Contributor Site}](https://contributor.r-project.org/slack), [\textcolor{cyan}{RStudio Community}](https://community.rstudio.com/) y [\textcolor{cyan}{R Bloggers}](http://www.r-bloggers.com)).
+
+## ¿Qué es SIG?
+
+
+
+## ¿Por qué R como herramienta SIG?
+
+
+
+# Paquetes en R para datos espaciales
+
+# Tipos
+
+\begin{block}{Pregunta:}
+¿Por qué se considera que se debe tener en cuenta la distribución en el espacio para la modelación econométrica?
+\end{block}
+
+::::: columns
+::: {.column width="50%"}
+**Dependencia espacial**
+
+i.  Primera ley de Geografía de Tobler: “Todo está relacionado con todo lo demás, pero las cosas cercanas están más relacionadas que las distantes”. (1970: 236).
+:::
+
+::: {.column width="50%"}
+![](C:/Users/danie/OneDrive/Escritorio/Spatial-Econometrics-using-R/spatecon_images/leyNewton.png){#id .class width="65%" height="65%"}
+:::
+:::::
+
+**Autocorrelación espacial**. Las áreas vecinas son similares (Tobler, 1970)
+
+ii. Las áreas de observación son generalmente de diferentes tamaños. Heterogeneidad $\rightarrow$ Heterocedasticidad.
+
+

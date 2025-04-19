@@ -134,7 +134,6 @@ Moraga (2023) clasifica los datos vectoriales y raster como areal data. Sin emba
 
 [Añadir ejemplo]
 
-
 # Datos espaciales en R
 
 # Vector data
