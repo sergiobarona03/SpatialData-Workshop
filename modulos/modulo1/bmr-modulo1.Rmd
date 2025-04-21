@@ -15,7 +15,10 @@ output:
   ioslides_presentation: default
 institute:
 - Pontificia Universidad Javeriana de Cali
-fontsize: 10 pt
+header-includes:
+  - \usepackage{anyfontsize}
+  - \usepackage{graphicx}
+  - \renewcommand{\normalsize}{\fontsize{7}{7.2}\selectfont}
 ---
 
 ```{r setup, include=FALSE}
@@ -32,30 +35,67 @@ knitr::knit_hooks$set(chunk = function(x, options) {
 
 ## Datos espaciales: la ubicación importa
 
-Más allá de la elaboración de mapas, los datos espaciales permiten formular y responder preguntas que dependen de la **localización geográfica** y, por tanto, no se puede resolver únicamente mediante la observación directa de los datos (Bivand, Pebesma & Gómez-Rubio, 2008).
+Más allá de la elaboración de mapas, los datos espaciales permiten formular y responder preguntas que dependen de la **localización geográfica** y, por tanto, no se puede resolver únicamente mediante la observación directa de los datos \textcolor{cyan}{(Bivand, Pebesma \& Gómez-Rubio, 2008)}.
 
 ¿Qué tipo de preguntas se pueden abordar?
 
-- ¿Cuáles son los patrones espaciales y principales factores climáticos de la transmisión de la malaria en tres zonas fronterizas de Brasil, Venezuela y Guyana? (Wangdi et al., 2022)
+- ¿Cuáles son los patrones espaciales y principales factores climáticos de la transmisión de la malaria en tres zonas fronterizas de Brasil, Venezuela y Guyana? \textcolor{cyan}{(Wangdi et al., 2022)}.
 
-- ¿Cuál es la distribución espacial y cuáles son los factores predictivos de la violencia doméstico contra las mujeres en Etiopia? (Seid et al., 2021)
+- ¿Cuál es la distribución espacial y cuáles son los factores predictivos de la violencia doméstico contra las mujeres en Etiopia? \textcolor{cyan}{(Seid et al., 2021)}.
 
-- ¿Influye la distancia geográfica entre el candidato y el votante en la probabilidad de voto en las elecciones parlamentarias de Reino Unido? (Arzheimer & Evans, 2012)
+- ¿Influye la distancia geográfica entre el candidato y el votante en la probabilidad de voto en las elecciones parlamentarias de Reino Unido? \textcolor{cyan}{(Arzheimer \& Evans, 2012)}.
 
 ¿Y usando datos socioeconómicos?
 
-- ¿Influyen los factores espaciales en la convergencia del ingreso regional en Estados Unidos? (Rey & Mountouri, 1999)
+- ¿Influyen los factores espaciales en la convergencia del ingreso regional en Estados Unidos? \textcolor{cyan}{(Rey \& Mountouri, 1999)}.
 
-- ¿Varían los procesos que generan la pobreza infantil en diferentes subregiones de Estados Unidos? (Curtis, Voss & Long, 2012)
+- ¿Varían los procesos que generan la pobreza infantil en diferentes subregiones de Estados Unidos? \textcolor{cyan}{(Curtis, Voss \& Long, 2012)}.
 
 
 ## Rey & Mountouri (1999)
+
+::::: columns
+::: {.column width="60%"}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\lisa_1929.png){#id .class width="65%" height="65%"}
+
+:::
+
+::: {.column width="60%"}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\lisa_1994.png){#id .class width="65%" height="65%"}
+
+:::
+:::::
+
+
 
 
 
 ## Curtis, Voss & Long (2012)
 
 
+::::: columns
+::: {.column width="60%"}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\Fig2_NonWhite.png){#id .class width="65%" height="65%"}
+
+:::
+
+::: {.column width="60%"}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\Fig3_EconomicDependence.png){#id .class width="65%" height="65%"}
+
+:::
+:::::
 
 # R como herramienta SIG
 
@@ -74,36 +114,335 @@ Más allá de la elaboración de mapas, los datos espaciales permiten formular y
 
 -   Existe una comunidad activa que ha promovido el incremento en su número de usuarios ([\textcolor{cyan}{The R Project}](https://www.r-project.org/), [\textcolor{cyan}{R Contributor Site}](https://contributor.r-project.org/slack), [\textcolor{cyan}{RStudio Community}](https://community.rstudio.com/) y [\textcolor{cyan}{R Bloggers}](http://www.r-bloggers.com)).
 
-## ¿Qué es SIG?
-
-
-
 ## ¿Por qué R como herramienta SIG?
 
+La definición de \textcolor{cyan}{Burrough and McDonnell (1998, p. 11):}
 
+*Un conjunto poderoso de herramientas par recopilar, almacenar, transformar y visualizar datos espaciales del mundo real para un conjunto específico de propósitos. [Es] verificar, manipular y analizar datos que están referenciados espacialmente en la Tierra*
+
+R es una buena elección para el manejo y análisis de datos espaciales, dadas sus capacidades robustas de análisis y visualización. Entre sus ventajas:
+
+
+- **R base** ya incluye muchas funciones para leer, visualizar y analizar datos espaciales.
+
+- La funcionalidad base se ha complementado con una amplia gama de paquetes para datos raster y vectoriales, metadatos geográficos, muestreo espacial, análisis espacial, geoestadística, machine learning espacial, entre otros. (Para una descripción detallada: [\textcolor{cyan}{Bivand \& Nowosad (2025)}](https://cran.r-project.org/web/views/Spatial.html)
+
+- Comunidades activas en este campo: [\textcolor{cyan}{r-spatial}](https://r-spatial.org/) y [\textcolor{cyan}{rspatial}](https://cran.r-project.org/web/views/Spatial.html)
+
+- Muchos paquetes utilizan clases compartidas y estándares comunes, lo cual reduce la duplicación de esfuerzos.
 
 # Paquetes en R para datos espaciales
 
-# Tipos
-
-\begin{block}{Pregunta:}
-¿Por qué se considera que se debe tener en cuenta la distribución en el espacio para la modelación econométrica?
-\end{block}
+## Paquete `sf`
 
 ::::: columns
 ::: {.column width="50%"}
-**Dependencia espacial**
 
-i.  Primera ley de Geografía de Tobler: “Todo está relacionado con todo lo demás, pero las cosas cercanas están más relacionadas que las distantes”. (1970: 236).
+**Simple features (características simples)** hace referencia a un estándar formal (ISO 19125-1:2004) que describe cómo se representan los objetos del mundo real, enfocándose en su geometría espacial. También establece cómo almacenarlos en bases de datos y las operaciones geométricas que se deben definir.
+
+- Una **característica (feature)** se entiende como una entidad u objeto del mundo real.
+
+- Un **conjunto de características** puede conformar una única **característica** más compleja.
+
+- Las **características** tienen una **geometría** que indica su localización y poseen **atributos** que describen otras propiedades no espaciales.
+
 :::
 
 ::: {.column width="50%"}
-![](C:/Users/danie/OneDrive/Escritorio/Spatial-Econometrics-using-R/spatecon_images/leyNewton.png){#id .class width="65%" height="65%"}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\sf-lib.png){#id .class width="65%" height="65%"}
+
+
+```{r sf library, include=TRUE, echo=TRUE, eval=FALSE}
+install.packages("sf")
+
+library(sf)
+```
+
 :::
 :::::
 
-**Autocorrelación espacial**. Las áreas vecinas son similares (Tobler, 1970)
 
-ii. Las áreas de observación son generalmente de diferentes tamaños. Heterogeneidad $\rightarrow$ Heterocedasticidad.
+## Paquete `terra`
+
+::::: columns
+::: {.column width="50%"}
+
+- `terra` es un paquete de R para el análisis de datos espaciales, enfocado en datos `raster`.
+
+- Permite crear, leer, manipular y escribir datos raster de forma eficiente.
+
+- Sustituye el paquete `raster`, con una interfaz similaar, pero es más simple, rápido y potente.
+
+- Puede trabajar con archivos `raster` demasiado grandes para cargar en la memoria (RAM). El paquete `terra` sólo carga la estructura del archivo, i.e., número de filas y columna, extensión espacial, nombre del archivo, etc.
+
+:::
+
+::: {.column width="50%"}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\terra-library.png){#id .class width="65%" height="65%"}
+
+
+```{r terra library, include=TRUE, echo=TRUE, eval=FALSE}
+install.packages("terra")
+library(terra)
+```
+
+:::
+:::::
+
+
+## terra: clases
+
+El paquete `terra` está construido sobre varias clases de objetos. Las clases `SpatRaster` y `SpatVector` son las más importantes.
+
+\small
+
+\begin{tabular}{|l|p{8cm}|}
+\hline
+\textbf{Clase} & \textbf{Descripción} \\
+\hline
+\texttt{SpatRaster} & Representa datos raster (grillas) de múltiples capas. Este objeto almacena varios parámetros fundamentales que lo describen (número de columnas, filas, extensión espacial y sistema de referencia de coordenadas). \\
+\hline
+\texttt{SpatVector} & Representa datos vectoriales (puntos, líneas, polígonos) y sus atributos no-espaciales \\
+\hline
+\texttt{SpatExtent} & Define la extensión espacial de los objetos de la clase \textbf{SpatRaster} \\
+\hline
+\end{tabular}
+
+## Paquetes antiguos
+
+Hasta 2016, el paquete `sp` proporcionaba clases para datos espaciales vectoriales y raster, pero sus representaciones eran anteriores a los estándares internacionales más modernos y eficientes para datos vectoriales (incluidos en `sf`).
+
+**terra** es un paquete que reemplaza el paquete **raster** con una interfaz similar, pero más simple y rápido.
+
+Otros paquetes:
+
+- `rgdal` \textcolor{cyan}{(Bivand, Keitt \& Rowlingson, 2023)}
+
+- `rgeos` \textcolor{cyan}{(Bivand \& Rundel, 2022)}
+
+- `maptools` \textcolor{cyan}{(Bivand \& Lewin-Koh, 2022)}
+
+## Paquetes antiguos (cont.)
+
+\centering
+
+![Paquetes de CRAN que dependen (de manera directa o indirecta) de sp. Fuente: Bivand, Pebesma & Gómez-Rubio (2013)](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\old-packages.png){#id .class width="85%" height="85%"}
+
+# Tipos de datos espaciales
+
+## Datos vectoriales
+
+**Vector data** (datos vectoriales) es un modelo general usado para representar entidades espaciales como puntos, líneas y polígonos, junto con sus atributos. El paquete `sf` permite trabajar con datos vectoriales.
+
+::::: columns
+::: {.column width="60%"}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\example_sf.jpeg){#id .class width="80%" height="80%"}
+
+:::
+
+::: {.column width="60%"}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\example_countries.jpeg){#id .class width="80%" height="80%"}
+
+:::
+:::::
+
+## Tipos de geometrías sf
+
+Las geometrías más comunes son las siguientes:
+
+\begin{tabular}{|l|p{8cm}|}
+\hline
+\textbf{Tipo} & \textbf{Descripción} \\
+\hline
+\texttt{POINT} & Punto de dimensión cero. \\
+\hline
+
+\texttt{LINESTRING} & Secuencia de puntos conectados por segmentos de línea; geometría unidimensional. \\
+\hline
+
+\texttt{POLYGON} & Geometría bidimensional con área positiva; secuencia de puntos que forman un anillo cerrado que no forma intersección con sí mismo. Un polígono consta de uno o más anillos.  \\
+\hline
+
+\texttt{MULTIPOINT} & Conjunto de puntos individuales \\
+\hline
+
+\texttt{MULTILINESTRING} & Conjunto de líneas independientes\\
+\hline
+
+
+\texttt{MULTIPOLYGON} & Conjunto de polígonos representados en una sola geometría \\
+\hline
+
+\texttt{GEOMETRYCOLLECTION} & Conjunto de geometrías de cualquier tipo (excepto otra \texttt{GEOMETRYCOLLECTION}) \\
+\hline
+
+\end{tabular}
+
+Otras: **CIRCULARSTRING**, **COMPOUNDCURVE**, **CURVEPOLYGON**, **ULTICURVE**, **MULTISURFACE**, **CURVE**, **SURFACE**, **POLYHEDRALSURFACE**, **TIN**, **TRIANGLE**. (Véase: [\textcolor{cyan}{Simple Features for R}](https://r-spatial.github.io/sf/articles/sf1.html))
+
+
+## Formato Shapefile
+
+
+::::: columns
+::: {.column width="50%"}
+
+El **shapefile** es un formato común para almacenar datos vectoriales. No es un sólo archivo, sino un conjunto de archivos relacionados que deben estar en la misma carpeta. Los archivos principales son los siguientes:
+
+\vspace{10pt}
+
+- **____.shp**: almacena la geometría (puntos, líneas, polígonos, etc.)
+- **____.shx**: índice posicional de la geometría
+- **____.dbf**: atributos asociados
+
+- ____.prj: sistema de coordenadas e información de proyección
+- ____.sbn y .sbx: índice espacial de las entidades
+- ____.xml: metadatos espaciales en formato XML.
+
+:::
+
+::: {.column width="50%"}
+
+\vspace{15pt}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\files.shp.png){#id .class width="80%" height="80%"}
+
+\vspace{15pt}
+
+**Nota: para trabajar correctamente con un shapefile,  es imprescindible contar al menos con los archivos .shp, .shx y .dbf juntos en la misma carpeta con el mismo nombre base.** 
+
+:::
+:::::
+
+
+## Leer/escribir datos vectoriales
+
+La función `st_read()` del paquete sf permite leer archivos shapefile.
+
+```{r read 1, include=TRUE, echo=TRUE, eval=FALSE}
+# Cargar paquete
+library(sf)
+```
+
+```{r read 2, include=TRUE, echo=TRUE, eval=FALSE}
+# Definir directorio de trabajo
+setwd(“path”)
+```
+
+```{r read 3, include=TRUE, echo=TRUE, eval=FALSE}
+# Definir ruta y capa
+st_read(dsn = “path2”, layer = “layer”)
+```
+
+La función `st_write()` del paquete `sf` se utiliza para escribir datos espaciales a archivos:
+
+```{r read 4 , include=TRUE, echo=TRUE, eval=FALSE}
+st_write(obj = x, dsn = “path2”, layer = “path3”)
+```
+
+**Siguiente paso**: ejecutar el script *modulo1.R*.
+
+## Datos raster
+
+::::: columns
+::: {.column width="55%"}
+
+Los **datos raster** son una estructura de datos que representan el espacio como un conjunto de celdas del mismo tamaño (o píxeles), ordenadas en filas y columnas, y que pueden almacenar uno o más valores para cada celda.
+
+\vspace{20pt}
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\raster_648cells.jpeg){#id .class width="90%" height="90%"}
+
+:::
+
+::: {.column width="55%"}
+
+\vspace{15pt}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\raster_habitanteskm2.jpeg){#id .class width="90%" height="90%"}
+
+\vspace{20pt}
+
+Los **datos raster** se utilizan comúnmente para representar fenómenos continuos en el espacio, tales como la elevación.
+
+:::
+:::::
+
+## Formato GeoTIFF
+
+
+Los datos raster generalmente se almacenan en formato GeoTIFF, cuya extensión es .tif.
+
+```{r raster 1, include=TRUE, echo=TRUE, eval=FALSE}
+# Cargar paquete
+library(terra)
+```
+
+
+Usando la función `rast()` del paquete terra, podemos crear objetos raster.
+
+```{r raster 2, include=TRUE, echo=TRUE, eval=FALSE}
+# Crear objeto raster
+r <- rast(nrows=20, ncols=20, # Número de celdas (dimension 20x20)
+          xmin=0, xmax=360) # Coordenadas mín y máx.
+
+```
+
+También podemos utilizar esta función para leer archivos con la extensión .tif.
+
+```{r raster 3, include=TRUE, echo=TRUE, eval=FALSE}
+# Leer raster
+terra::rast(“raster_file.tif”)
+```
+
+**Siguiente paso**: ejecutar el script *modulo1.R*.
+
+# Referencias
+
+## Referencias
+
+- Pebesma, E. (2023). *Simple Features for R (sf) – Vignette*. [https://cran.r-project.org/web/packages/sf/vignettes/sf1.html](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html)
+
+- Hijmans, R. J. (2023). *Terra: Spatial Data Analysis*. [CRAN package](https://cran.r-project.org/web/packages/terra/index.html)
+
+- Arzheimer, K., & Evans, J. (2012). Geolocation and voting: Candidate–voter distance effects on party choice in the 2010 UK general election in England. *Political Geography, 31*(5), 301–310. [https://doi.org/10.1016/j.polgeo.2012.04.006](https://doi.org/10.1016/j.polgeo.2012.04.006)
+
+- Bivand, R., Keitt, T., & Rowlingson, B. (2023). *Rgdal: Bindings for the Geospatial Data Abstraction Library*. [CRAN package](https://CRAN.R-project.org/package=rgdal)
+
+- Bivand, R., & Lewin-Koh, N. (2022). *Maptools: Tools for Handling Spatial Objects*. [CRAN package](https://CRAN.R-project.org/package=maptools)
+
+- Bivand, R., & Rundel, C. (2022). *Rgeos: Interface to Geometry Engine – Open Source (GEOS)*. [CRAN package](https://CRAN.R-project.org/package=rgeos)
+
+- Bivand, R. S., Pebesma, E., & Gómez-Rubio, V. (2008). *Applied Spatial Data Analysis with R*. Springer.
+
+- Burrough, P. A., & McDonnell, R. A. (1998). *Principles of Geographical Information Systems*. Oxford University Press.
+
+- Curtis, K. J., Voss, P. R., & Long, D. D. (2012). Spatial variation in poverty-generating processes: Child poverty in the United States. *Social Science Research, 41*(1), 146–159. [https://doi.org/10.1016/j.ssresearch.2011.07.007](https://doi.org/10.1016/j.ssresearch.2011.07.007)
+
+---
+
+- Moraga, P. (2023). *Spatial Statistics for Data Science: Theory and Practice with R*. Chapman & Hall/CRC Data Science Series. ISBN: 9781032633510.
+
+- Rey, S. J., & Montouri, B. D. (1999). US Regional Income Convergence: A Spatial Econometric Perspective. *Regional Studies*, 33(2), 143–156. [https://doi.org/10.1080/00343409950122945](https://doi.org/10.1080/00343409950122945)
+
+- Seid, M. A., Melese, Y. Y., & Tolossa, T. (2021). Spatial distribution and predictors of domestic violence against women: Evidence from analysis of Ethiopian demographic health survey 2016. *BMC Women's Health, 21*, 231. [https://doi.org/10.1186/s12905-021-01465-4](https://doi.org/10.1186/s12905-021-01465-4)
+
+- Wangdi, K., Lambrechts, T., & Clements, A. C. A. (2022). Spatial patterns and climate drivers of malaria in three border areas of Brazil, Venezuela and Guyana, 2016–2018. *Sci Rep, 12*, 10666. [https://doi.org/10.1038/s41598-022-14012-4](https://doi.org/10.1038/s41598-022-14012-4)
 
 

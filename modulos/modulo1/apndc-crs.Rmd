@@ -1,0 +1,250 @@
+---
+title: "Notas sobre Sistema de Referencia de Coordenadas"
+subtitle: "Apéndice" 
+author:
+- Sergio A. Barona \newline
+- Laboratorio de Economía Aplicada \newline
+- Departamento de Economía y Finanzas \newline
+date: '21-04-2025'
+output:
+  beamer_presentation:
+    theme: Berlin
+    fonttheme: structurebold
+    slide_level: 1
+    toc: no
+  ioslides_presentation: default
+institute:
+- Pontificia Universidad Javeriana de Cali
+header-includes:
+  - \usepackage{anyfontsize}
+  - \usepackage{graphicx}
+  - \usepackage{amssymb} 
+  - \renewcommand{\normalsize}{\fontsize{7}{7.2}\selectfont}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  paste0("\n \\", "tiny","\n\n", x, "\n\n \\normalsize")
+})
+```
+
+
+# Sistema de Referencia de Coordenadas (CRS)
+
+Un **CRS** es un marco de referencia que define la posición de entidades geográficas en un espacio (bidimensional o tridimensional).
+
+::::: columns
+::: {.column width="55%"}
+
+1. Sistemas de coordenadas geográficas
+
+Usan **latitud** y **longitud**, expresadas en grados sexagesimales o decimales.
+
+\vspace{15pt}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\img_grados.png){#id .class width="70%" height="70%"}
+
+:::
+
+::: {.column width="55%"}
+
+2. Sistemas de coordenadas geográficas
+
+Usan **coordenadas cartesianas (X, Y, Z)**, normalmente en metros.
+
+\vspace{15pt}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\img_proj.png){#id .class width="70%" height="70%"}
+
+:::
+:::::
+
+# Modelización de la superficie de la tierra
+
+- Dado que el geoide es computacionalmente muy complejo, se opta por aproximarlo con una superficie matemática (regular).
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\modelizacion_tierra.png){#id .class width="90%" height="90%"}
+
+# Elipsoide de referencia: WGS 84
+
+
+- El Sistema Geodésico Mundial 1984 (WGS 84) se basa en el elipsoide WGS 84, que es prácticamente idéntico al elipsoide GRS 80, con diferencias mínimas en sus parámetros.
+
+- Ambos elipsoides son **geocéntricos**, cuyo origen coincide con el centro de masa de la Tierra, incluyendo océanos y atmósfera.
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\wgs84-axis.png){#id .class width="60%" height="60%"}
+
+\resizebox{0.8\textwidth}{!}{%
+  \begin{tabular}{lcc}
+    \hline
+    \textbf{Parámetro} & \textbf{GRS 80} & \textbf{WGS 84} \\
+    \hline
+    Semieje mayor (a) & 6 378 137,0 m & 6 378 137,0 m \\
+    Semieje menor (b) & $\approx$ 6 356 752,314140 m & $\approx$ 6 356 752,314245 m \\
+    Achatamiento inverso (1/f) & 298,257222100882711... & 298,257223563 \\
+    \hline
+  \end{tabular}
+}
+
+
+# Datum
+
+- **El datum no es un CRS; es un componente del CRS**
+
+- El **datum** define cómo se relaciona el CRS con la Tierra (posición del origen, escala y orientación del sistema).
+
+\vspace{8pt}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\datum-pica.png){#id .class width="60%" height="60%"}
+
+\vspace{8pt}
+
+- **Datum geocéntrico**: centro de masa de la Tierra como origen (global).
+
+- **Datum local**: ajusta el elipsoide a la superficie de la Tierra en un área determinada.
+
+
+
+#	Sistema de eje geodésicos
+
+Expresan posiciones mediante coordenadas angulares.
+
+- **Paralelos**: líneas de igual latitud (este–oeste). El paralelo 0 es el ecuador.
+
+- **Meridianos**: líneas de igual longitud (norte–sur). El meridiano 0 es el de Greenwich.
+
+- **Formatos**:
+
+\centering
+
+DMS: $75^\circ\ 34'\ 27''$
+
+DD: 75.5742
+
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\LatLong.png){#id .class width="60%" height="60%"}
+
+
+
+#	Proyecciones cartográficas
+
+
+
+Una **proyección cartográfica** transforma puntos del sistema geodésico en posiciones sobre una superficie plana.
+
+**Sistema de coordenadas proyectadas**, comúnmente un sistema bidimensional (X, Y) expresado en metros.
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\OrangePeelProGoode.jpg){#id .class width="50%" height="50%"}
+
+- Al proyectar un elipsoide en un plano, se introduce algún tipo de distorsión. 
+
+- Algunas proyecciones se diseñan para preservar ciertas propiedades como la forma local (**conformes**), área de las entidades mostradas (**equivalentes**), distancia entre ciertos puntos (**equidistantes**).
+
+- Cuando se trabaja con datos de un sistema de coordenadas geográficas, a veces resulta útil asignar X e Y a la longitud y latitud, respect.
+
+
+# Ejemplo 1: Proyección Mercator
+
+::::: columns
+::: {.column width="40%"}
+
+- Proyección **cilíndrica conforme** diseñada originalmente para la navegación marítima.
+
+- Adecuada para la representación cartográfica a gran escala de las áreas cercanas al ecuador, donde la distorsión es mínima.
+
+- Los **paralelos** son líneas rectas horizontales, cuya separación aumenta progresivamente conforme se acercan a los polos.
+
+- **Limitaciones**: Los polos no se pueden representar en la proyección de Mercator. En la práctica, límites superior e inferior de la latitud: 89°N y 89°S. La distorsión de área aumenta con la latitud.
+
+:::
+
+::: {.column width="70%"}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\mercator_img.png){#id .class width="60%" height="60%"}
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\3.Greenland-and-Africa-Mercator-768x768.png){#id .class width="60%" height="60%"}
+
+
+:::
+:::::
+
+# Ejemplo 2: Sistema **UTM**
+
+- El sistema **UTM** se basa en la proyección **Mercator transversa**, que es una proyección cilíndrica transversa y conforme.
+
+- El sistema UTM divide la Tierra en 60 zonas iguales, cada una de $6\circ$ de longitud geográfica (zonas o husos).
+
+- Cada una de las zonas UTM tiene su propio meridiano central único.
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\utm_zones.png){#id .class width="80%" height="80%"}
+
+# Sintaxis PROJ.4
+
+::::: columns
+::: {.column width="30%"}
+
+- La sintaxis **PROJ.4** usa el formato `etiqueta = valor` con la etiqueta comenzando con `+`, representando un CRS.
+
+- Usando la etiqueta `+init = ...` con el código EPSG, el CRS se define automáticamente usando los parámetros correspondientes.
+
+```{r proj1, include=FALSE, echo=FALSE, eval=TRUE}
+setwd("C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\")
+library(sf)
+shp.data <- st_read("vector_data/DANE_geodata/", layer = "MGN_ANM_MPIOS")
+
+```
+
+```{r proj2, include=TRUE, echo=TRUE, eval=FALSE, warning=FALSE}
+st_transform(shp.data, 
+             "+proj=longlat 
+             +datum=WGS84 
+             +no_defs 
+             +type=crs")
+```
+
+**Consultar**: [\textcolor{cyan}{EPSG database}](https://spatialreference.org/ref/epsg/)
+
+
+:::
+
+::: {.column width="60%"}
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\Proj4.png){#id .class width="90%" height="90%"}
+
+:::
+:::::
+
+# Materiales adicionales y referencias:
+
+## Materiales adicionales y referencias
+
+- Wimberly, M. C. (2023). *Geographic Data Science with R: Visualizing and Analyzing Environmental Change*. [Capítulo 8: Coordinate Reference Systems](https://bookdown.org/mcwimberly/gdswr-book/coordinate-reference-systems.html)
+
+- ESRI. *Understanding Map Projections*. [Capítulo 8: Coordinate Reference Systems (PDF)](https://downloads2.esri.com/support/documentation/ao_/710understanding_map_projections.pdf)
+
+- IGAC (2004). *Adopción del Marco Geocéntrico Nacional de Referencia MAGNA-SIRGAS como datum oficial de Colombia*. [Enlace (PDF)](https://antiguo.igac.gov.co/sites/igac.gov.co/files/adopcion.pdf)
+
+- ArcGIS Desktop. *¿Qué son los sistemas de coordenadas geográficas?* [Enlace](https://desktop.arcgis.com/es/arcmap/latest/map/projections/about-geographic-coordinate-systems.htm)
+
+- ArcGIS Desktop. *¿Qué son los sistemas de coordenadas proyectadas?* [Enlace](https://desktop.arcgis.com/es/arcmap/latest/map/projections/about-projected-coordinate-systems.htm)
+
+
