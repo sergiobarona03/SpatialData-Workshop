@@ -1,0 +1,202 @@
+---
+title: "Introducción al manejo de datos espaciales usando R"
+subtitle: Módulo 2 
+author:
+- Sergio A. Barona \newline
+- Laboratorio de Economía Aplicada \newline
+- Departamento de Economía y Finanzas \newline
+date: '23-04-2025'
+output:
+  beamer_presentation:
+    theme: Berlin
+    fonttheme: structurebold
+    slide_level: 1
+    toc: no
+  ioslides_presentation: default
+institute:
+- Pontificia Universidad Javeriana de Cali
+header-includes:
+  - \usepackage{anyfontsize}
+  - \usepackage{graphicx}
+  - \renewcommand{\normalsize}{\fontsize{6}{7.2}\selectfont}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  paste0("\n \\", "tiny","\n\n", x, "\n\n \\normalsize")
+})
+```
+
+
+# Paquete `sf`
+
+::::: columns
+::: {.column width="50%"}
+
+**Simple features (características simples)** hace referencia a un estándar formal (ISO 19125-1:2004) que describe cómo se representan los objetos del mundo real, enfocándose en su geometría espacial. También establece cómo almacenarlos en bases de datos y las operaciones geométricas que se deben definir.
+
+- Una **característica (feature)** se entiende como una entidad u objeto del mundo real.
+
+- Un **conjunto de características** puede conformar una única **característica** más compleja.
+
+- Las **características** tienen una **geometría** que indica su localización y poseen **atributos** que describen otras propiedades no espaciales.
+
+:::
+
+::: {.column width="50%"}
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo1\\img\\sf-lib.png){#id .class width="65%" height="65%"}
+
+
+```{r sf library, include=TRUE, echo=TRUE, eval=FALSE}
+install.packages("sf")
+
+library(sf)
+```
+
+:::
+:::::
+
+
+
+
+
+# Clase sf
+
+1. **sf**: geometrías y atributos de las características simples.
+
+
+```{r sf1, include=FALSE, echo=FALSE, eval=TRUE}
+# Crear objeto raster
+library(sf)
+library(tidyverse)
+dpto.nbi = st_read(dsn = "C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\vector_data\\nbi_dptos\\",
+                   layer = "dptoscol_nbi_cnpv2018")
+ex1 = dpto.nbi %>% select(cod, dpto, geometry)
+
+```
+
+
+```{r sf2, include=TRUE, echo=TRUE, eval=TRUE}
+ex1
+```
+
+# Clase sfg
+
+2. **sfg:** geometría de una característica simple (individual)
+
+\tiny
+```{r sf3, include=TRUE, echo=TRUE, eval=TRUE}
+pt1 = st_point(c(1,1))
+pt1
+class(pt1)
+```
+
+\tiny
+```{r sf4, include=TRUE, echo=TRUE, eval=TRUE}
+polygon1 = st_polygon(list(rbind(c(7,1), c(9,1), 
+                                 c(8,3), c(7,1))))
+polygon1
+class(polygon1)
+```
+
+
+
+# Clase sfc
+
+3. **sfc:** columna (tipo lista) en el data.frame **sf** que contiene las geometrías de cada característica
+
+\tiny
+
+```{r sf51, include=TRUE, echo=TRUE, eval=TRUE}
+g1 = st_geometry(ex1)
+g1[1:2]
+```
+
+\tiny
+
+```{r sf52, include=TRUE, echo=TRUE, eval=TRUE}
+class(g1)
+```
+
+Podemos usar la función ` st_sfc()` para crear una clase **sfc** a partir de geometrías individuales.
+
+
+# Clases: sf, sfg, sfc
+
+\centering
+
+![](C:\\Users\\sergio.barona\\Desktop\\SpatialData-Workshop\\modulos\\modulo2\\img\\sfc_sfg.png){#id .class width="90%" height="90%"}
+
+# Creación de objetos sf
+
+Funciones básicas para definir geometrías
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4} % Aumenta el espacio entre filas
+\resizebox{1\textwidth}{!}{
+\begin{tabular}{|l|l|}
+    \hline
+    \textbf{Funciones} & \textbf{Ejemplo} \\ \hline
+    \texttt{st\_point()} & \texttt{st\_point(c(1,2))} \\ \hline
+    \texttt{st\_multipoint()} & \texttt{st\_multipoint(rbind(c(1,2), c(3,4), c(5,6)))} \\ \hline
+    \texttt{st\_linestring()} & \texttt{st\_linestring(rbind(c(1,2), c(2,3), c(3,2)))} \\ \hline
+    \texttt{st\_multilinestring()} & \texttt{st\_multilinestring(list(rbind(c(0,0), c(1,1)), rbind(c(2,2), c(3,3))))} \\ \hline
+    \texttt{st\_polygon()} & \texttt{st\_polygon(list(rbind(c(0,0), c(0,1), c(1,1), c(1,0), c(0,0))))} \\ \hline
+    \texttt{st\_multipolygon()} & \texttt{st\_multipolygon(list(list(rbind(...)), list(rbind(...))))} \\ \hline
+    \texttt{st\_geometrycollection()} & \texttt{st\_geometrycollection(list(st\_point(c(1,2)), st\_linestring(...)))} \\ \hline
+\end{tabular}
+}
+\renewcommand{\arraystretch}{1.0} % Opcional: volver al valor por defecto
+\end{center}
+
+
+A partir de las siguientes funciones, se agrupan geometrías y atributos:
+
+```{r sf6, include=TRUE, echo=TRUE, eval=FALSE}
+# Agrupar geometrías en una columna sfc
+st_sfc(pt1, pt2, polgon, line)
+
+# Combinar atributos y geometrías en un objeto
+st_sf(df, geoms)
+
+```
+
+# Otras funciones st_*()
+
+Adicionalmente, las siguientes funciones de **sf** permiten operaciones útiles:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4} % Aumenta espacio entre filas
+\resizebox{1\textwidth}{!}{
+\begin{tabular}{|l|p{8cm}|}
+    \hline
+    \textbf{Funciones} & \textbf{Descripción} \\ \hline
+    \texttt{st\_unión()} & Unión de geometrías \\ \hline
+    \texttt{st\_simplify()} & Simplificar geometrías reduciendo el número de vértices \\ \hline
+    \texttt{st\_centroid()} & Calcular el centroide de una geometría \\ \hline
+    \texttt{st\_intersects()} & Evalúa si dos geometrías se intersecan \\ \hline
+    \texttt{st\_sample()} & Generar puntos aleatorios dentro de una geometría \\ \hline
+    \texttt{st\_buffer} & Área de influencia a una distancia dada (alrededor de la geometría) \\ \hline
+    \texttt{st\_distance} & Calcular la distancia entre geometrías \\ \hline
+    \texttt{st\_difference} & Devuelve la parte de la geometría que no se superpone con otra \\ \hline
+\end{tabular}
+}
+\renewcommand{\arraystretch}{1.0} % Opcional: volver al valor original
+\end{center}
+
+
+# Referencias
+
+- Pebesma, E. (2023). *Simple Features for R (sf) – Vignette*. [https://cran.r-project.org/web/packages/sf/vignettes/sf1.html](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html)
+
+- Moraga, P. (2023). *Spatial Statistics for Data Science: Theory and Practice with R*. Chapman & Hall/CRC Data Science Series. ISBN: 9781032633510.
+
+
+
+
